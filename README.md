@@ -200,9 +200,13 @@ Website: Will break in browser (automation tools only)
 ```
 
 ---
+## 🌟 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=MorDavid/FlareTunnel&type=date&legend=top-left)](https://www.star-history.com/#MorDavid/FlareTunnel&type=date&legend=top-left)
 
 ## ⚠️ Disclaimer
 
 This tool is for educational and research purposes only. Please respect Cloudflare's Terms of Service. The authors are not responsible for any misuse of this tool.
 
 **Made with ❤️ for the security and automation community**
+
