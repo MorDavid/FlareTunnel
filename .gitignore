@@ -1,0 +1,17 @@
+# Build artifacts
+flaretunnel
+flaretunnel.exe
+flaretunnel-*
+FlareTunnel
+FlareTunnel.exe
+
+# Configuration files
+flaretunnel.json
+flaretunnel_endpoints.json
+
+# SSL certificates
+flaretunnel_ca.crt
+flaretunnel_ca.key
+
+# Backup files
+flaretunnel_config_backup.json
