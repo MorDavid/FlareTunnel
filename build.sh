@@ -9,20 +9,48 @@ echo "🔨 Building FlareTunnel..."
 echo "📦 Downloading dependencies..."
 go mod download
 
-# Build for current platform
-echo "🏗️  Building for current platform..."
-go build -ldflags="-s -w" -o flaretunnel flaretunnel.go
+# Detect current platform
+GOOS=$(go env GOOS)
 
-echo "✅ Build complete: ./flaretunnel"
+# Detect architecture using system detection (more reliable on macOS)
+SYSTEM_ARCH=$(uname -m)
+case "$SYSTEM_ARCH" in
+    x86_64|amd64)
+        GOARCH="amd64"
+        ;;
+    aarch64|arm64)
+        GOARCH="arm64"
+        ;;
+    armv7l)
+        GOARCH="arm"
+        ;;
+    *)
+        # Fallback to Go's detection
+        GOARCH=$(go env GOARCH)
+        ;;
+esac
+
+# Set binary name for current platform (simple name for ease of use)
+BINARY_NAME="FlareTunnel"
+if [ "$GOOS" = "windows" ]; then
+    BINARY_NAME="FlareTunnel.exe"
+fi
+
+# Build for current platform
+echo "🏗️  Building for current platform ($GOOS/$GOARCH)..."
+
+GOOS=$GOOS GOARCH=$GOARCH go build -ldflags="-s -w" -o FlareTunnel FlareTunnel.go
+
+echo "✅ Build complete: ./$BINARY_NAME"
 echo ""
 echo "📊 Binary size:"
-ls -lh flaretunnel | awk '{print $5}'
+ls -lh "$BINARY_NAME" | awk '{print $5}'
 echo ""
 echo "🚀 Quick start:"
-echo "  ./flaretunnel config          # Configure accounts"
-echo "  ./flaretunnel create --count 5   # Create workers"
-echo "  ./flaretunnel list --verbose     # List workers"
-echo "  ./flaretunnel tunnel --verbose   # Start proxy"
+echo "  ./$BINARY_NAME config          # Configure accounts"
+echo "  ./$BINARY_NAME create --count 5   # Create workers"
+echo "  ./$BINARY_NAME list --verbose     # List workers"
+echo "  ./$BINARY_NAME tunnel --verbose   # Start proxy"
 echo ""
 
 # Optional: Build for other platforms
@@ -34,23 +62,23 @@ then
     
     # Windows
     echo "  Building for Windows (amd64)..."
-    GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o flaretunnel-windows-amd64.exe flaretunnel.go
+    GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o flaretunnel-windows-amd64.exe FlareTunnel.go
     
     # Linux
     echo "  Building for Linux (amd64)..."
-    GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o flaretunnel-linux-amd64 flaretunnel.go
+    GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o flaretunnel-linux-amd64 FlareTunnel.go
     
     # macOS Intel
     echo "  Building for macOS (amd64)..."
-    GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o flaretunnel-macos-amd64 flaretunnel.go
+    GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o flaretunnel-macos-amd64 FlareTunnel.go
     
     # macOS Apple Silicon
     echo "  Building for macOS (arm64)..."
-    GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o flaretunnel-macos-arm64 flaretunnel.go
+    GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o flaretunnel-macos-arm64 FlareTunnel.go
     
     # Linux ARM (Raspberry Pi, etc.)
     echo "  Building for Linux (arm64)..."
-    GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o flaretunnel-linux-arm64 flaretunnel.go
+    GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o flaretunnel-linux-arm64 FlareTunnel.go
     
     echo ""
     echo "✅ Cross-compilation complete!"
